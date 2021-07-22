@@ -1,5 +1,7 @@
 package com.forward.forward;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +35,17 @@ public class Order{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", listOfQuantity=" + listOfQuantity +
+                ", description='" + description + '\'' +
+                ", totalCost=" + totalCost +
+                ", date=" + date +
+                '}';
     }
 
     public double getTotalCost() {

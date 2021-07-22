@@ -28,11 +28,11 @@ public class ProductQuantity
     public int getQuantity()
     {
         return quantity;
-    }
+    }   //quantity in stock
 
     public void setQuantity(int quantity)
     {
-        if(quantity <= 0)
+        if(quantity < 0)
         {
             throw new IllegalArgumentException("Value not allowed!");
         }

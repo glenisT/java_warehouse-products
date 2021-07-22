@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Warehouse
 {
 
-    public HashMap<String, ProductQuantity> storageMap = new HashMap<>();
+    public HashMap<String, ProductQuantity> storageMap = new HashMap<String, ProductQuantity>();
 
     public Warehouse() {
     }
@@ -25,6 +25,7 @@ public class Warehouse
         if(!storageMap.containsKey(description))
         {
             System.out.println("Product is not present in warehouse!");
+            return 0;
         }
         return storageMap.get(description).getQuantity();
     }
