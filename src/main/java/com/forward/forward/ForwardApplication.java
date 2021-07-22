@@ -1,12 +1,10 @@
 package com.forward.forward;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.lang.reflect.Array;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 public class ForwardApplication {
@@ -50,7 +48,7 @@ public class ForwardApplication {
                 System.out.println("Product no longer in stock!");
                 continue;
             }
-            System.out.println("Available! Product added to list.");
+            System.out.println("Available! Product added to list. ");
             productsList.add(customerNeed);
             stock.storageMap.get(customerNeed).setQuantity(stock.storageMap.get(customerNeed).getQuantity() - 1);
             i++;
@@ -64,18 +62,28 @@ public class ForwardApplication {
         }
 
         Order order = new Order();
-        System.out.println("Your Order:");
+        //System.out.println("Your Order:");
+        String output = "Your order:";
         for(i = 0; i < productsOrdered.size(); i++)
         {
-            System.out.println(productsOrdered.get(i).getProduct().getDescription());//description
-            System.out.println("Left in stock: " + productsOrdered.get(i).getQuantity());//quantity
-            System.out.println("Unit price: " + productsOrdered.get(i).getProduct().getPrice());//cost
+            //System.out.println(productsOrdered.get(i).getProduct().getDescription());//description
+            //System.out.println("Left in stock: " + productsOrdered.get(i).getQuantity());//quantity
+            //System.out.println("Unit price: " + productsOrdered.get(i).getProduct().getPrice());//cost
+            output = output + "\n -" + productsOrdered.get(i).getProduct().getDescription() +
+                    "\n Left in stock: " + productsOrdered.get(i).getQuantity() +
+                    "\n Unit price: " + productsOrdered.get(i).getProduct().getPrice();
         }
 
-        System.out.println("Your orders: " + productsList + ".");
-        System.out.println("Your orders FULL: " + productsOrdered + ".");
+        try {
+            // write order to a file
+            Files.writeString(Path.of("order.txt"), output);
 
-        //System.out.println(stock.getProductQuantity(productsList.get(1)));  //made for testing
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
+        //System.out.println("Your orders: " + productsList + ".");   //test
+        //System.out.println("Your orders FULL: " + productsOrdered + ".");   //test
+        //System.out.println("OUTPUT \n" + output);       //test
     }
 }

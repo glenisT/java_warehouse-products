@@ -1,0 +1,10 @@
+Your order:
+ -Fender Jazz Bass
+ Left in stock: 0
+ Unit price: 400.0
+ -Fender Jazz Bass
+ Left in stock: 0
+ Unit price: 400.0
+ -Fender Mustang
+ Left in stock: 2
+ Unit price: 200.0
