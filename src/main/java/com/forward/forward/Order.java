@@ -1,7 +1,5 @@
 package com.forward.forward;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,17 +46,13 @@ public class Order{
                 '}';
     }
 
-    public double getTotalCost() {
-        for (ProductQuantity p:
-             listOfQuantity)
+    //getTotalCost receives List parameter to avoid order info scrambling
+    public double getTotalCost(List<Integer> quantitiesSaver) {
+        for (int i = 0; i < listOfQuantity.size(); i++)
         {
-            totalCost = p.getQuantity() * p.getProduct().getPrice() + totalCost;
+            totalCost = quantitiesSaver.get(i) * listOfQuantity.get(i).getProduct().getPrice() + totalCost;
         }
         return totalCost;
-    }
-
-    public void setTotalCost(double totalCost) {
-        this.totalCost = totalCost;
     }
 
     public Date getDate() {

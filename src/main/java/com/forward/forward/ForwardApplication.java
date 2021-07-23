@@ -1,11 +1,10 @@
 package com.forward.forward;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 public class ForwardApplication {
 
@@ -33,57 +32,96 @@ public class ForwardApplication {
 
         Scanner in = new Scanner(System.in);
 
-        ArrayList<String> productsList = new ArrayList<>();
+        ArrayList<String> productsList = new ArrayList<>();     //list of customer products for ease of alphabetical re-arrangement and element wandering through cycles
+
+        //printing available products and quantities to avoid throwing IllegalArgumentException from ProductQuantity
+        System.out.println("Available Products:");
+        System.out.println("1." + stock.storageMap.get("Fender Jazz Bass").getProduct().getDescription()
+                + " - " + stock.storageMap.get("Fender Jazz Bass").getQuantity() + " units available");
+        System.out.println("2." + stock.storageMap.get("Fender Jaguar").getProduct().getDescription()
+                + " - " + stock.storageMap.get("Fender Jaguar").getQuantity() + " units available");
+        System.out.println("3." + stock.storageMap.get("Fender Mustang").getProduct().getDescription()
+                + " - " + stock.storageMap.get("Fender Mustang").getQuantity() + " units available");
+        System.out.println("4." + stock.storageMap.get("Jackson Rhodes V").getProduct().getDescription()
+                + " - " + stock.storageMap.get("Jackson Rhodes V").getQuantity() + " units available");
+        System.out.println("5." + stock.storageMap.get("Vox VT20+").getProduct().getDescription()
+                + " - " + stock.storageMap.get("Vox VT20+").getQuantity() + " units available"
+        + "\n ------------------------------------------");
 
         System.out.println("How many products would you like to purchase?");
         int numberOfProducts = in.nextInt();
 
-        int i = 1;
-        while (i <= numberOfProducts)
-        {
-            System.out.println("Add product to your list (" + (numberOfProducts - i + 1) + " left):");
-            String customerNeed = in.nextLine();
+        int i = 0;
+        int customerQuantity = 0;   //product quantity ordered - info received from user
+        Vector<Integer> quantitiesSaver = new Vector<>();   //quantities are saved in a vector, so that alphabetical re-arrangement of productsList doesn't scramble the order info
+        String customerNeed = ""; //customer's ordered product saved in customerNeed, to be used as key to access storageMap HashMap
+        while (i < numberOfProducts)       //loop to show messages and receive info based on quantity provided in first message
+        {   //MISTAKE OF OUTPUT HERE!
+            System.out.println("Add product to your list (" + (numberOfProducts - i) + " left):");
+            customerNeed = in.nextLine();
             if (stock.getProductQuantity(customerNeed) == 0)
             {
                 System.out.println("Product no longer in stock!");
                 continue;
             }
-            System.out.println("Available! Product added to list. ");
+            System.out.println("Available! Product added to list.");
             productsList.add(customerNeed);
-            stock.storageMap.get(customerNeed).setQuantity(stock.storageMap.get(customerNeed).getQuantity() - 1);
+            Collections.sort(productsList, String.CASE_INSENSITIVE_ORDER);  //productsList ordered alphabetically
             i++;
         }
 
-        Collections.sort(productsList, String.CASE_INSENSITIVE_ORDER);
-        ArrayList<ProductQuantity> productsOrdered = new ArrayList<>();
+        for(i = 0; i < productsList.size(); i++)    //product quantities asked for AFTER alphabetical rearrangement, so quantities belong to appropriate products
+        {
+            System.out.println("Please provide quantity of purchase for " + productsList.get(i) + ":");
+            customerQuantity = in.nextInt();
+            stock.storageMap.get(productsList.get(i)).setQuantity(stock.storageMap.get(productsList.get(i)).getQuantity()
+                    - customerQuantity); //for more detailed info display on order.txt
+            quantitiesSaver.add(customerQuantity);  //quantities now ordered in same way as the products list
+        }
+
+
+        List<ProductQuantity> productsOrdered = new ArrayList<>();  //list type to correspond with Order class structure
         for (i = 0; i < productsList.size(); i++)
         {
             productsOrdered.add(stock.storageMap.get(productsList.get(i)));
         }
 
         Order order = new Order();
-        //System.out.println("Your Order:");
-        String output = "Your order:";
-        for(i = 0; i < productsOrdered.size(); i++)
+        String output = "---Your Order---"; //output to send on order.txt
+
+        //creating order object
+        order.setListOfQuantity(productsOrdered);
+        order.setId((int)(Math.random() * 1000 + 1));
+        order.setDescription( "" + productsList);
+        Date today = new Date();
+        order.setDate(today);
+
+        //first giving individual products ordered and other info
+        for(i = 0; i < order.getListOfQuantity().size(); i++)
         {
-            //System.out.println(productsOrdered.get(i).getProduct().getDescription());//description
-            //System.out.println("Left in stock: " + productsOrdered.get(i).getQuantity());//quantity
-            //System.out.println("Unit price: " + productsOrdered.get(i).getProduct().getPrice());//cost
-            output = output + "\n -" + productsOrdered.get(i).getProduct().getDescription() +
-                    "\n Left in stock: " + productsOrdered.get(i).getQuantity() +
-                    "\n Unit price: " + productsOrdered.get(i).getProduct().getPrice();
+            output = output + "\n -" + order.getListOfQuantity().get(i).getProduct().getDescription() +
+                    "\n Left in stock: " + order.getListOfQuantity().get(i).getQuantity() +
+                    "\n Unit price: $" + productsOrdered.get(i).getProduct().getPrice() +
+                    "\n Units purchased: " + quantitiesSaver.get(i) +
+                    ".";
         }
 
+        //adding final order info
+        output = output + "\n---Order Details---" +
+                "\n Order ID: " + order.getId() +
+                "\n Order Description: " + order.getDescription() +
+                "\n Order Date: " + order.getDate() +
+                "\n Total Cost: " + order.getTotalCost(quantitiesSaver);
+
+        //send application output to order.txt file
         try {
-            // write order to a file
             Files.writeString(Path.of("order.txt"), output);
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-        //System.out.println("Your orders: " + productsList + ".");   //test
-        //System.out.println("Your orders FULL: " + productsOrdered + ".");   //test
-        //System.out.println("OUTPUT \n" + output);       //test
+        //system.out used for testing
+        //System.out.println(quantitiesSaver);
     }
 }
