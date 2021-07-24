@@ -50,6 +50,7 @@ public class ForwardApplication {
 
         System.out.println("How many products would you like to purchase?");
         int numberOfProducts = in.nextInt();
+        in.nextLine();
 
         int i = 0;
         int customerQuantity = 0;   //product quantity ordered - info received from user

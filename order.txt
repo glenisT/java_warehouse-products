@@ -1,10 +1,14 @@
 ---Your Order---
  -Fender Jazz Bass
- Left in stock: 1
+ Left in stock: 0
  Unit price: $400.0
- Units purchased: 1.
+ Units purchased: 2.
+ -Vox VT20+
+ Left in stock: 5
+ Unit price: $250.0
+ Units purchased: 5.
 ---Order Details---
- Order ID: 34
- Order Description: [Fender Jazz Bass]
- Order Date: Fri Jul 23 21:13:52 CEST 2021
- Total Cost: 400.0
+ Order ID: 221
+ Order Description: [Fender Jazz Bass, Vox VT20+]
+ Order Date: Sat Jul 24 18:47:48 CEST 2021
+ Total Cost: 2050.0
